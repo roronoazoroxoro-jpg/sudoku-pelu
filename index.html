@@ -33,7 +33,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=12" />
+    <link rel="stylesheet" href="styles.css?v=14" />
   </head>
   <body>
     <div id="main-menu" class="screen main-menu" role="main">
@@ -54,13 +54,32 @@
           <div class="neon-stat"><span id="menu-streak">0</span><small>RACHA</small></div>
         </div>
 
+        <div class="menu-platform mobile-only" id="menu-platform-mobile">
+          <button id="btn-menu-install" class="neon-btn neon-btn-install neon-btn-wide" type="button">
+            📲 Descargar en el celular
+          </button>
+          <button class="neon-btn neon-btn-play neon-btn-wide" data-action="play" type="button">
+            ▶️ Jugar ahora
+          </button>
+          <button id="btn-menu-pc" class="neon-btn neon-btn-pc neon-btn-wide" type="button">
+            💻 Jugar en la PC
+          </button>
+        </div>
+
         <nav class="neon-nav" aria-label="Menú principal">
-          <button class="neon-btn" data-action="play" type="button" style="--i:0">JUGAR</button>
+          <button class="neon-btn neon-btn-play-main desktop-only" data-action="play" type="button" style="--i:0">JUGAR</button>
           <button class="neon-btn" data-action="map" type="button" style="--i:1">MAPA</button>
           <button class="neon-btn neon-btn-wide" data-action="store" type="button" style="--i:2">TIENDA</button>
           <button class="neon-btn neon-btn-wide" data-action="settings" type="button" style="--i:3">AJUSTES</button>
           <button class="neon-btn" data-action="share" type="button" style="--i:4">COMPARTIR</button>
         </nav>
+
+        <div class="menu-platform desktop-only" id="menu-platform-desktop">
+          <button id="btn-menu-install-desktop" class="neon-btn neon-btn-install" type="button">
+            💻 Instalar en la PC
+          </button>
+          <p class="menu-mobile-hint">¿En el celular? Abrí <strong>sudoku-pelu-game.netlify.app</strong> desde tu navegador.</p>
+        </div>
       </div>
     </div>
 
@@ -370,6 +389,38 @@
       </div>
     </div>
 
+    <!-- Guía instalar app -->
+    <div class="modal-backdrop sheet-backdrop" id="install-guide-modal" hidden>
+      <div class="modal-card sheet-card install-guide-card" role="dialog" aria-labelledby="install-guide-title" aria-modal="true">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <h2 id="install-guide-title" class="sheet-title">Descargar Sudoku Pelu</h2>
+        <div id="install-guide-ios" class="install-guide-steps" hidden>
+          <p class="modal-text">En <strong>iPhone / iPad</strong> (Safari):</p>
+          <ol>
+            <li>Tocá el botón <strong>Compartir</strong> (cuadrado con flecha).</li>
+            <li>Elegí <strong>Agregar a pantalla de inicio</strong>.</li>
+            <li>Tocá <strong>Agregar</strong>. ¡Listo!</li>
+          </ol>
+        </div>
+        <div id="install-guide-android" class="install-guide-steps" hidden>
+          <p class="modal-text">En <strong>Android</strong> (Chrome):</p>
+          <ol>
+            <li>Tocá el menú <strong>⋮</strong> arriba a la derecha.</li>
+            <li>Elegí <strong>Instalar app</strong> o <strong>Agregar a pantalla de inicio</strong>.</li>
+            <li>Confirmá. El juego queda en tu celular.</li>
+          </ol>
+        </div>
+        <div id="install-guide-desktop" class="install-guide-steps" hidden>
+          <p class="modal-text">En <strong>PC</strong> (Chrome o Edge):</p>
+          <ol>
+            <li>Buscá el ícono <strong>Instalar</strong> en la barra de direcciones.</li>
+            <li>O usá el menú del navegador → <strong>Instalar Sudoku Pelu</strong>.</li>
+          </ol>
+        </div>
+        <button id="btn-close-install-guide" class="btn btn-gold full-width" type="button">Entendido</button>
+      </div>
+    </div>
+
     <!-- Menú móvil (overflow) -->
     <div class="modal-backdrop sheet-backdrop" id="mobile-menu-modal" hidden>
       <div class="modal-card sheet-card mobile-menu-card" role="dialog" aria-labelledby="mobile-menu-title" aria-modal="true">
@@ -385,8 +436,8 @@
           <button id="mobile-menu-share" class="mobile-menu-item" type="button">
             <span>Compartir juego</span>
           </button>
-          <button id="mobile-menu-install" class="mobile-menu-item" type="button" hidden>
-            <span>Instalar app</span>
+          <button id="mobile-menu-install" class="mobile-menu-item" type="button">
+            <span>📲 Descargar en el celular</span>
           </button>
           <label class="mobile-menu-item mobile-menu-toggle">
             <span>Música de fondo</span>
@@ -489,7 +540,7 @@
       </div>
     </div>
 
-    <script src="config.js?v=13"></script>
-    <script src="script.js?v=13"></script>
+    <script src="config.js?v=14"></script>
+    <script src="script.js?v=14"></script>
   </body>
 </html>

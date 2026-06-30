@@ -1668,20 +1668,73 @@ button, select { font: inherit; cursor: pointer; }
 
   .neon-menu {
     max-width: 100%;
-    padding: 1.5rem 1.25rem;
-    padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
+    padding: 1rem 1rem 1.5rem;
+    padding-top: max(1rem, env(safe-area-inset-top, 0px));
     padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+    min-height: auto;
+    justify-content: flex-start;
+  }
+
+  .neon-logo-wrap {
+    margin-bottom: 0.65rem;
+  }
+
+  .neon-logo {
+    width: 56px;
+    height: 56px;
+    font-size: 1.75rem;
+  }
+
+  .neon-title {
+    font-size: clamp(1.35rem, 6vw, 1.7rem);
+    letter-spacing: 0.08em;
+  }
+
+  .neon-subtitle {
+    margin: 0.35rem 0 0.75rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+  }
+
+  .neon-stats {
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .neon-stat span {
+    font-size: 1.1rem;
+  }
+
+  .menu-platform {
+    margin-bottom: 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .neon-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .neon-nav .neon-btn-wide {
+    grid-column: span 2;
+  }
+
+  .neon-nav .neon-btn:not(.neon-btn-wide) {
+    width: 100%;
   }
 
   .neon-btn {
-    width: min(280px, 100%);
-    min-height: 52px;
-    padding: 1rem 1.5rem;
-    font-size: 0.9rem;
+    width: 100%;
+    min-height: 50px;
+    padding: 0.85rem 1rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
   }
 
   .neon-btn-wide {
-    width: min(300px, 100%);
+    width: 100%;
   }
 
   .map-header {
@@ -1778,11 +1831,16 @@ button, select { font: inherit; cursor: pointer; }
 /* ── Neon Main Menu (cyberpunk) ── */
 
 .main-menu {
-  display: grid !important;
-  place-items: center;
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   background: #030810;
   z-index: 500;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .menu-checker {
@@ -1826,6 +1884,13 @@ button, select { font: inherit; cursor: pointer; }
   padding: 2rem 1.5rem;
   max-width: 340px;
   width: 100%;
+  margin: auto;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(100%, 100dvh);
+  box-sizing: border-box;
 }
 
 .neon-logo-wrap {
@@ -1905,6 +1970,74 @@ button, select { font: inherit; cursor: pointer; }
   align-items: center;
   gap: 0.65rem;
   width: 100%;
+}
+
+.menu-platform {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.menu-mobile-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.menu-mobile-hint strong {
+  color: var(--cyan);
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.neon-btn-install {
+  border-color: #fbbf24;
+  color: #fde68a;
+  background: linear-gradient(180deg, rgba(40, 28, 0, 0.95), rgba(20, 14, 0, 0.95));
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+  box-shadow:
+    0 0 12px rgba(251, 191, 36, 0.45),
+    inset 0 0 20px rgba(251, 191, 36, 0.08);
+  min-height: 54px;
+}
+
+.neon-btn-play {
+  border-color: #4ade80;
+  color: #bbf7d0;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.7);
+  box-shadow:
+    0 0 10px rgba(74, 222, 128, 0.35),
+    inset 0 0 20px rgba(74, 222, 128, 0.06);
+}
+
+.neon-btn-pc {
+  border-color: #a78bfa;
+  color: #ddd6fe;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  min-height: 48px;
+  text-shadow: 0 0 6px rgba(167, 139, 250, 0.6);
+}
+
+.install-guide-card .install-guide-steps {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.install-guide-card ol {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--text-soft);
+  line-height: 1.65;
+  font-size: 0.9rem;
+}
+
+.install-guide-card li + li {
+  margin-top: 0.35rem;
 }
 
 .neon-btn {

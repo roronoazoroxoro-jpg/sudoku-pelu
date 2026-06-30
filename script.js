@@ -78,6 +78,15 @@ const btnSolve = document.querySelector('#btn-solve');
 const btnShop = document.querySelector('#btn-shop');
 const btnShare = document.querySelector('#btn-share');
 const btnInstall = document.querySelector('#btn-install');
+const btnMenuInstall = document.querySelector('#btn-menu-install');
+const btnMenuInstallDesktop = document.querySelector('#btn-menu-install-desktop');
+const btnMenuPc = document.querySelector('#btn-menu-pc');
+const installGuideModal = document.querySelector('#install-guide-modal');
+const installGuideIos = document.querySelector('#install-guide-ios');
+const installGuideAndroid = document.querySelector('#install-guide-android');
+const installGuideDesktop = document.querySelector('#install-guide-desktop');
+const btnCloseInstallGuide = document.querySelector('#btn-close-install-guide');
+const menuPlatformMobile = document.querySelector('#menu-platform-mobile');
 const btnBuySidebar = document.querySelector('#btn-buy-sidebar');
 const footerShop = document.querySelector('#footer-shop');
 const footerAlias = document.querySelector('#footer-alias');
@@ -123,6 +132,92 @@ const mobileMenuInstall = document.querySelector('#mobile-menu-install');
 const mobileMusicToggle = document.querySelector('#mobile-music-toggle');
 
 let deferredInstallPrompt = null;
+
+function isMobileDevice() {
+  return window.matchMedia('(max-width: 600px)').matches
+    || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+}
+
+function isIOSDevice() {
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+function isAndroidDevice() {
+  return /Android/i.test(navigator.userAgent);
+}
+
+function isStandaloneApp() {
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+}
+
+function getGameUrl() {
+  const base = CONFIG.siteUrl || window.location.origin;
+  return String(base).replace(/\/$/, '');
+}
+
+function updateInstallButtonsVisibility() {
+  const installed = isStandaloneApp();
+  const onMobile = isMobileDevice();
+
+  if (btnMenuInstall) btnMenuInstall.hidden = installed || !onMobile;
+  if (menuPlatformMobile) menuPlatformMobile.hidden = !onMobile;
+  if (btnMenuInstallDesktop) btnMenuInstallDesktop.hidden = installed || onMobile;
+  if (btnInstall) btnInstall.hidden = installed || onMobile;
+  if (mobileMenuInstall) mobileMenuInstall.hidden = installed || !onMobile;
+}
+
+function showInstallGuideModal() {
+  if (!installGuideModal) return;
+  installGuideIos.hidden = true;
+  installGuideAndroid.hidden = true;
+  installGuideDesktop.hidden = true;
+
+  if (isIOSDevice()) installGuideIos.hidden = false;
+  else if (isAndroidDevice()) installGuideAndroid.hidden = false;
+  else installGuideDesktop.hidden = false;
+
+  installGuideModal.hidden = false;
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(() => installGuideModal.classList.add('visible'));
+}
+
+function hideInstallGuideModal() {
+  if (!installGuideModal) return;
+  installGuideModal.classList.remove('visible');
+  installGuideModal.hidden = true;
+  if (!document.querySelector('.modal-backdrop.visible')) {
+    document.body.classList.remove('modal-open');
+  }
+}
+
+async function triggerInstall() {
+  haptic('light');
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    updateInstallButtonsVisibility();
+    return;
+  }
+  showInstallGuideModal();
+}
+
+async function sharePcLink() {
+  haptic('light');
+  const url = getGameUrl();
+  const text = 'Abrí este link en tu computadora para jugar Sudoku Pelu:';
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'Sudoku Pelu — PC', text, url });
+      return;
+    }
+  } catch {
+    /* cancelado */
+  }
+  await copyText(url, 'Link para PC');
+  setMessage('Link copiado. Pegalo en el navegador de tu computadora.', 'success');
+}
 let gameStarted = false;
 let sfxEnabled = true;
 let mapProgress = {};
@@ -1583,7 +1678,7 @@ function hideShopModal() {
 function showMobileMenuModal() {
   if (!mobileMenuModal) return;
   if (mobileMusicToggle) mobileMusicToggle.checked = musicToggle.checked;
-  if (mobileMenuInstall) mobileMenuInstall.hidden = btnInstall?.hidden ?? true;
+  if (mobileMenuInstall) mobileMenuInstall.hidden = !isMobileDevice() || isStandaloneApp();
   mobileMenuModal.hidden = false;
   document.body.classList.add('modal-open');
   requestAnimationFrame(() => mobileMenuModal.classList.add('visible'));
@@ -1641,7 +1736,7 @@ function initMainMenu() {
   loadSettings();
 
   if (neonNav) {
-    neonNav.querySelectorAll('.neon-btn').forEach(btn => {
+    neonNav.querySelectorAll('.neon-btn[data-action]').forEach(btn => {
       btn.addEventListener('mouseenter', () => playMenuSound('menuHover'));
       btn.addEventListener('click', () => {
         if (audioContext?.state === 'suspended') audioContext.resume();
@@ -1649,6 +1744,23 @@ function initMainMenu() {
       });
     });
   }
+
+  document.querySelectorAll('.menu-platform .neon-btn[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (audioContext?.state === 'suspended') audioContext.resume();
+      handleMenuAction(btn.dataset.action, btn);
+    });
+  });
+
+  btnMenuInstall?.addEventListener('click', triggerInstall);
+  btnMenuInstallDesktop?.addEventListener('click', triggerInstall);
+  btnMenuPc?.addEventListener('click', sharePcLink);
+  btnCloseInstallGuide?.addEventListener('click', hideInstallGuideModal);
+  installGuideModal?.addEventListener('click', e => {
+    if (e.target === installGuideModal) hideInstallGuideModal();
+  });
+
+  updateInstallButtonsVisibility();
 
   btnBackWorlds?.addEventListener('click', () => {
     playMenuConfirmSound();
@@ -1754,30 +1866,22 @@ function initInstallPrompt() {
   window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault();
     deferredInstallPrompt = event;
-    btnInstall.hidden = false;
-    if (mobileMenuInstall) mobileMenuInstall.hidden = false;
+    updateInstallButtonsVisibility();
   });
 
-  const runInstall = async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    btnInstall.hidden = true;
-    if (mobileMenuInstall) mobileMenuInstall.hidden = true;
-  };
-
-  btnInstall.addEventListener('click', runInstall);
+  btnInstall?.addEventListener('click', triggerInstall);
   mobileMenuInstall?.addEventListener('click', () => {
     hideMobileMenuModal();
-    runInstall();
+    triggerInstall();
   });
 
   window.addEventListener('appinstalled', () => {
-    btnInstall.hidden = true;
-    if (mobileMenuInstall) mobileMenuInstall.hidden = true;
+    deferredInstallPrompt = null;
+    updateInstallButtonsVisibility();
     setMessage('¡App instalada! Jugá desde tu pantalla de inicio.', 'success');
   });
+
+  updateInstallButtonsVisibility();
 }
 
 function registerServiceWorker() {
