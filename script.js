@@ -1786,7 +1786,7 @@ function registerServiceWorker() {
     try {
       const regs = await navigator.serviceWorker.getRegistrations();
       for (const reg of regs) await reg.unregister();
-      await navigator.serviceWorker.register('./sw.js?v=6');
+      await navigator.serviceWorker.register('./sw.js?v=7');
     } catch {
       /* sin SW */
     }

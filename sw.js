@@ -1,4 +1,4 @@
-const CACHE = 'sudoku-pelu-v4';
+const CACHE = 'sudoku-pelu-v5';
 const ASSETS = [
   './',
   './index.html',

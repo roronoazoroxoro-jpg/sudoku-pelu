@@ -30,7 +30,7 @@ window.APP_CONFIG = {
 
   supportEmail: 'sudokupelu@gmail.com',
 
-  siteUrl: '',
+  siteUrl: 'https://sudoku-pelu-game.netlify.app',
   paymentPollIntervalMs: 3000,
   freeHeartIntervalHours: 12,
 

@@ -1,9 +1,10 @@
 {
   "name": "Sudoku Pelu",
   "short_name": "Sudoku Pelu",
+  "id": "https://sudoku-pelu-game.netlify.app/",
   "description": "Sudoku premium con 6 mapas, 600 niveles, jefes y diseño arcade.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "https://sudoku-pelu-game.netlify.app/index.html",
+  "scope": "https://sudoku-pelu-game.netlify.app/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#07050f",
