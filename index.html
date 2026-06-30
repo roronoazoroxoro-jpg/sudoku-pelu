@@ -33,7 +33,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=17" />
+    <link rel="stylesheet" href="styles.css?v=18" />
   </head>
   <body>
     <div id="main-menu" class="screen main-menu" role="main">
@@ -41,26 +41,59 @@
       <div class="menu-vignette" aria-hidden="true"></div>
       <div class="menu-scanlines" aria-hidden="true"></div>
 
+      <div class="landing-orbs" aria-hidden="true">
+        <span class="landing-orb landing-orb-1"></span>
+        <span class="landing-orb landing-orb-2"></span>
+        <span class="landing-orb landing-orb-3"></span>
+      </div>
+
       <div class="menu-content neon-menu">
         <!-- Pantalla de descarga (navegador web) -->
         <div id="landing-panel" class="menu-panel landing-panel">
-          <div class="neon-logo-wrap">
-            <div class="neon-logo" aria-hidden="true"><span>9</span></div>
-          </div>
-          <h1 class="neon-title" data-text="SUDOKU PELU">SUDOKU PELU</h1>
-          <p class="neon-subtitle">6 MAPAS · 600 NIVELES · JEFES</p>
-          <p class="landing-lead">Descargá la app gratis y jugá sin depender del navegador.</p>
-
-          <div class="landing-downloads">
-            <button id="btn-download-mobile" class="neon-btn neon-btn-install neon-btn-wide landing-btn" type="button">
-              📲 Descargar para celular
-            </button>
-            <button id="btn-download-pc" class="neon-btn neon-btn-pc neon-btn-wide landing-btn" type="button">
-              💻 Descargar para PC
-            </button>
+          <div class="landing-hero">
+            <div class="landing-logo-ring" aria-hidden="true"></div>
+            <div class="neon-logo-wrap">
+              <div class="neon-logo landing-logo" aria-hidden="true"><span>9</span></div>
+            </div>
+            <h1 class="neon-title landing-title">SUDOKU PELU</h1>
+            <p class="neon-subtitle landing-tagline">6 MAPAS · 600 NIVELES · JEFES</p>
           </div>
 
-          <p class="landing-note">Android · iPhone · Windows · Mac · Gratis</p>
+          <ul class="landing-features" aria-label="Características">
+            <li><span aria-hidden="true">🎮</span> Arcade</li>
+            <li><span aria-hidden="true">❤️</span> Vidas</li>
+            <li><span aria-hidden="true">👹</span> Jefes</li>
+            <li><span aria-hidden="true">📴</span> Offline</li>
+          </ul>
+
+          <p class="landing-lead">Instalá la app y jugá como en un juego de verdad — sin depender del navegador.</p>
+
+          <div class="landing-card">
+            <p class="landing-card-label">Elegí tu dispositivo</p>
+            <div class="landing-downloads">
+              <button id="btn-download-mobile" class="landing-dl-btn landing-dl-mobile" type="button">
+                <span class="landing-dl-icon" aria-hidden="true">📱</span>
+                <span class="landing-dl-text">
+                  <strong>Descargar para celular</strong>
+                  <small>Android · iPhone</small>
+                </span>
+                <span class="landing-dl-arrow" aria-hidden="true">›</span>
+              </button>
+              <button id="btn-download-pc" class="landing-dl-btn landing-dl-pc" type="button">
+                <span class="landing-dl-icon" aria-hidden="true">💻</span>
+                <span class="landing-dl-text">
+                  <strong>Descargar para PC</strong>
+                  <small>Windows · Mac</small>
+                </span>
+                <span class="landing-dl-arrow" aria-hidden="true">›</span>
+              </button>
+            </div>
+          </div>
+
+          <p class="landing-note">
+            <span class="landing-free-badge">100% Gratis</span>
+            Sin publicidad molesta
+          </p>
         </div>
 
         <!-- Menú del juego (solo con la app instalada) -->
@@ -549,7 +582,7 @@
       </div>
     </div>
 
-    <script src="config.js?v=17"></script>
-    <script src="script.js?v=17"></script>
+    <script src="config.js?v=18"></script>
+    <script src="script.js?v=18"></script>
   </body>
 </html>
