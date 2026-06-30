@@ -812,6 +812,14 @@ function updateNumberPadVisibility() {
     const val = Number(button.dataset.value);
     if (!Number.isInteger(val)) return;
     const exhausted = countDigitOnBoard(val) >= 9;
+    const inMobileDock = Boolean(button.closest('#mobile-dock-grid'));
+    if (inMobileDock) {
+      button.classList.remove('exhausted');
+      button.disabled = exhausted;
+      button.classList.toggle('dimmed-num', exhausted);
+      return;
+    }
+    button.classList.remove('dimmed-num');
     button.classList.toggle('exhausted', exhausted);
     button.disabled = exhausted;
   });
