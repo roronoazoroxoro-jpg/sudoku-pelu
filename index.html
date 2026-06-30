@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="description" content="Sudoku Pelu — 6 mapas, 600 niveles, jefes en el nivel 50 y 100. Diseño premium, vidas, rachas y compra de vidas extras." />
+    <meta name="keywords" content="sudoku, juego sudoku, sudoku online, sudoku gratis, sudoku argentina" />
+    <meta name="author" content="Sudoku Pelu" />
+    <meta name="theme-color" content="#030810" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Sudoku Pelu" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Sudoku Pelu — Sudoku premium con 100 niveles" />
+    <meta property="og:description" content="Resolvé Sudoku con estilo arcade. 100 niveles, vidas, rachas y animaciones. Gratis con compras opcionales." />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:image" content="icons/icon.svg" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Sudoku Pelu" />
+    <meta name="twitter:description" content="El Sudoku más copado. 100 niveles gratis." />
+
+    <title>Sudoku Pelu — Sudoku Premium · 100 Niveles</title>
+
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icons/icon.svg" />
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=12" />
+  </head>
+  <body>
+    <div id="main-menu" class="screen main-menu" role="main">
+      <div class="menu-checker" aria-hidden="true"></div>
+      <div class="menu-vignette" aria-hidden="true"></div>
+      <div class="menu-scanlines" aria-hidden="true"></div>
+
+      <div class="menu-content neon-menu">
+        <div class="neon-logo-wrap">
+          <div class="neon-logo" aria-hidden="true"><span>9</span></div>
+        </div>
+        <h1 class="neon-title" data-text="SUDOKU PELU">SUDOKU PELU</h1>
+        <p class="neon-subtitle">6 MAPAS · 600 NIVELES · JEFES</p>
+
+        <div class="neon-stats">
+          <div class="neon-stat"><span id="menu-completed">0</span><small>OK</small></div>
+          <div class="neon-stat"><span id="menu-unlocked">1</span><small>LIBRES</small></div>
+          <div class="neon-stat"><span id="menu-streak">0</span><small>RACHA</small></div>
+        </div>
+
+        <nav class="neon-nav" aria-label="Menú principal">
+          <button class="neon-btn" data-action="play" type="button" style="--i:0">JUGAR</button>
+          <button class="neon-btn" data-action="map" type="button" style="--i:1">MAPA</button>
+          <button class="neon-btn neon-btn-wide" data-action="store" type="button" style="--i:2">TIENDA</button>
+          <button class="neon-btn neon-btn-wide" data-action="settings" type="button" style="--i:3">AJUSTES</button>
+          <button class="neon-btn" data-action="share" type="button" style="--i:4">COMPARTIR</button>
+        </nav>
+      </div>
+    </div>
+
+    <div id="world-map-screen" class="screen world-map-screen hidden" hidden>
+      <header class="map-header">
+        <button id="btn-back-menu-from-worlds" class="btn btn-ghost btn-icon" type="button" aria-label="Menú">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="map-header-center">
+          <h2>Mundos</h2>
+          <p id="worlds-summary">Elegí un mapa · 100 niveles c/u</p>
+        </div>
+        <div class="btn-icon" aria-hidden="true"></div>
+      </header>
+      <div class="worlds-grid" id="worlds-grid"></div>
+    </div>
+
+    <div id="level-map-screen" class="screen level-map-screen hidden" hidden>
+      <header class="map-header">
+        <button id="btn-back-worlds" class="btn btn-ghost btn-icon" type="button" aria-label="Mundos">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="map-header-center">
+          <h2 id="map-name-label">Camino Neón</h2>
+          <p id="map-progress-label">0 / 100 niveles</p>
+        </div>
+        <button id="btn-map-shop" class="btn btn-shop btn-icon" type="button" title="Tienda">❤️</button>
+      </header>
+      <div class="neon-path-scroll" id="neon-path-scroll">
+        <svg class="neon-path-svg" id="neon-path-svg" aria-hidden="true"></svg>
+        <div class="neon-path-nodes" id="level-nodes"></div>
+      </div>
+    </div>
+
+    <div class="ambient-bg" aria-hidden="true">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <div class="app-shell app-hidden" id="app-shell">
+      <header class="top-bar">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true"><span>9</span></div>
+          <div>
+            <p class="brand-name">Sudoku Pelu</p>
+            <p class="brand-tag">6 mapas · 600 niveles</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button id="btn-home-menu" class="btn btn-ghost" type="button" title="Menú principal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="btn-label">Menú</span>
+          </button>
+          <button id="btn-back-map" class="btn btn-ghost" type="button" title="Volver al mapa">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            <span class="btn-label">Mapa</span>
+          </button>
+          <button id="btn-shop" class="btn btn-shop" type="button" title="Tienda de vidas">
+            <span>❤️</span>
+            <span class="btn-label">Tienda</span>
+          </button>
+          <button id="btn-share" class="btn btn-ghost desktop-only" type="button" title="Compartir">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+            <span class="btn-label">Compartir</span>
+          </button>
+          <button id="btn-install" class="btn btn-ghost install-btn desktop-only" type="button" hidden title="Instalar app">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span class="btn-label">Instalar</span>
+          </button>
+          <button id="btn-reset" class="btn btn-ghost desktop-only" type="button" title="Reiniciar nivel">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span class="btn-label">Reiniciar</span>
+          </button>
+          <button id="btn-solve" class="btn btn-ghost desktop-only" type="button" title="Mostrar solución">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span class="btn-label">Solución</span>
+          </button>
+          <button id="btn-more-mobile" class="btn btn-ghost mobile-only" type="button" aria-label="Más opciones" title="Más opciones">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+          </button>
+          <label class="audio-toggle desktop-only" title="Música">
+            <input id="music-toggle" type="checkbox" checked />
+            <span class="audio-toggle-track">
+              <svg class="icon-on" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11 5 6 9H2v6h4l5 4V5z"/></svg>
+              <svg class="icon-off" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11 5 6 9H2v6h4l5 4V5zm8.59 3.41L11 18.17V5.83l8.59 8.58a1 1 0 0 1 1.42 1.42L12.41 12l8.6 8.59a1 1 0 0 1-1.42 1.42z"/></svg>
+            </span>
+          </label>
+        </div>
+      </header>
+
+      <div class="game-layout">
+        <aside class="sidebar">
+          <div class="stat-panel level-panel">
+            <div class="panel-label">Nivel</div>
+            <div class="level-big" id="level-label">1</div>
+            <div class="level-sub" id="map-level-sub">Mapa 1 · Nivel 1</div>
+            <div class="progress-track">
+              <div class="progress-fill" id="global-progress-fill" style="width: 1%"></div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <div class="mini-stat">
+              <span class="mini-label">Dificultad</span>
+              <span class="difficulty-pill easy" id="difficulty-label">Fácil</span>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-label">Pistas</span>
+              <strong id="clues-label">0</strong>
+            </div>
+          </div>
+
+          <div class="stat-panel lives-panel lives-card">
+            <div class="panel-label">Vidas</div>
+            <div class="lives-display" id="lives-display" aria-label="Vidas restantes"></div>
+            <button id="btn-buy-sidebar" class="btn btn-gold btn-compact" type="button">+ Comprar vidas</button>
+          </div>
+
+          <div class="stat-row">
+            <div class="mini-stat">
+              <span class="mini-label">Tiempo</span>
+              <strong class="timer" id="timer-label">00:00</strong>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-label">Racha</span>
+              <strong class="streak-value" id="streak-badge">0 🔥</strong>
+            </div>
+          </div>
+
+          <div class="stat-panel fill-panel">
+            <div class="panel-label">Progreso del tablero</div>
+            <div class="fill-bar">
+              <div class="fill-bar-inner" id="board-fill-bar" style="width: 0%"></div>
+            </div>
+            <span class="fill-percent" id="fill-percent">0%</span>
+          </div>
+
+          <div class="sidebar-controls">
+            <label class="select-wrap">
+              <span>Nivel</span>
+              <select id="level-select"></select>
+            </label>
+            <div class="nav-btns">
+              <button id="btn-prev" class="btn btn-outline" type="button">← Ant.</button>
+              <button id="btn-next" class="btn btn-primary" type="button">Sig. →</button>
+            </div>
+          </div>
+        </aside>
+
+        <main class="game-stage">
+          <div class="stage-glow" aria-hidden="true"></div>
+
+          <div class="mobile-hud" id="mobile-hud" aria-label="Estado del juego">
+            <div class="mobile-hud-item mobile-hud-level">
+              <span class="mobile-hud-label">Nivel</span>
+              <strong id="mobile-level">1</strong>
+            </div>
+            <div class="mobile-hud-item mobile-hud-lives" id="mobile-lives-wrap">
+              <span class="mobile-hud-label">Vidas</span>
+              <div class="mobile-lives-row" id="mobile-lives-display" aria-label="Vidas restantes"></div>
+            </div>
+            <div class="mobile-hud-item">
+              <span class="mobile-hud-label">Tiempo</span>
+              <strong class="timer" id="mobile-timer">00:00</strong>
+            </div>
+            <div class="mobile-hud-item">
+              <span class="mobile-hud-label">Racha</span>
+              <strong class="streak-value" id="mobile-streak">0 🔥</strong>
+            </div>
+          </div>
+
+          <div class="play-area" id="play-area">
+            <div class="sudoku-frame" id="sudoku-frame">
+              <div class="frame-spacer frame-corner"></div>
+              <div class="pad pad-top" id="pad-top" aria-label="Números superiores"></div>
+              <div class="frame-spacer frame-corner"></div>
+
+              <div class="pad pad-left" id="pad-left" aria-label="Números izquierdos"></div>
+              <div class="board-wrapper">
+                <div class="board" id="sudoku-board"></div>
+              </div>
+              <div class="pad pad-right" id="pad-right" aria-label="Números derechos"></div>
+
+              <div class="frame-spacer frame-corner"></div>
+              <div class="pad pad-bottom" id="pad-bottom" aria-label="Controles inferiores">
+                <button class="key-button clear" data-value="clear" type="button">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  Borrar
+                </button>
+              </div>
+              <div class="frame-spacer frame-corner"></div>
+            </div>
+
+            <aside class="boss-panel" id="boss-panel" hidden>
+              <div class="boss-header">
+                <span class="boss-icon">👹</span>
+                <div>
+                  <h3>JEFE SUDOKU</h3>
+                  <p id="boss-status">Compitiendo...</p>
+                </div>
+              </div>
+              <div class="boss-race">
+                <div class="race-row">
+                  <span>Vos</span>
+                  <div class="race-bar"><div class="race-fill player-fill" id="player-race-fill"></div></div>
+                  <span id="player-race-pct">0%</span>
+                </div>
+                <div class="race-row boss-row">
+                  <span>Jefe</span>
+                  <div class="race-bar"><div class="race-fill boss-fill" id="boss-race-fill"></div></div>
+                  <span id="boss-race-pct">0%</span>
+                </div>
+              </div>
+              <div class="boss-board" id="boss-board" aria-label="Tablero del jefe"></div>
+            </aside>
+          </div>
+          <div class="toast-bar" id="message" role="status" aria-live="polite">Tocá una casilla y empezá a jugar.</div>
+        </main>
+      </div>
+
+      <nav class="mobile-dock" id="mobile-dock" aria-label="Teclado numérico">
+        <div class="mobile-dock-grid" id="mobile-dock-grid"></div>
+        <button class="mobile-dock-clear key-button clear" data-value="clear" type="button" aria-label="Borrar casilla">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          Borrar
+        </button>
+      </nav>
+
+      <footer class="app-footer">
+        <p>Sudoku Pelu © 2026</p>
+        <nav class="footer-links">
+          <a href="privacidad.html">Privacidad</a>
+          <span>·</span>
+          <a href="terminos.html">Términos</a>
+          <span>·</span>
+          <a href="#" id="footer-shop">Tienda</a>
+        </nav>
+        <p class="footer-pay">Cobros en <strong id="footer-bank">Banco Macro</strong> · Alias <strong id="footer-alias">FLECO.CRUCE.CINTO</strong> · Activación automática</p>
+      </footer>
+    </div>
+
+    <!-- Derrota vs Jefe -->
+    <div class="modal-backdrop" id="boss-defeat-modal" hidden>
+      <div class="modal-card boss-defeat-card" role="dialog" aria-modal="true">
+        <span class="boss-defeat-icon">👹</span>
+        <h2>¡El Jefe ganó!</h2>
+        <p class="modal-text">Terminó el Sudoku antes que vos. Reintentá el nivel y sé más rápido.</p>
+        <button id="btn-boss-retry" class="btn btn-primary full-width" type="button">Reintentar nivel</button>
+        <button id="btn-boss-to-map" class="btn btn-ghost full-width" type="button">Volver al mapa</button>
+      </div>
+    </div>
+
+    <!-- Nivel completado -->
+    <div class="modal-backdrop" id="level-complete-modal" hidden>
+      <div class="modal-card complete-card" role="dialog" aria-labelledby="complete-title" aria-modal="true">
+        <div class="complete-burst" aria-hidden="true"></div>
+        <span class="complete-trophy">🏆</span>
+        <h2 id="complete-title">¡Nivel completado!</h2>
+        <p id="complete-message" class="modal-text">Desbloqueaste el siguiente nivel en el camino neón.</p>
+        <div class="complete-stats">
+          <div><span id="complete-time">00:00</span><small>Tiempo</small></div>
+          <div><span id="complete-streak">0</span><small>Racha</small></div>
+        </div>
+        <div class="complete-actions">
+          <button id="btn-go-map" class="btn btn-primary full-width" type="button">Elegir siguiente nivel</button>
+          <button id="btn-play-next" class="btn btn-gold full-width" type="button" hidden>Jugar nivel siguiente →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ajustes -->
+    <div class="modal-backdrop" id="settings-modal" hidden>
+      <div class="modal-card settings-card" role="dialog" aria-labelledby="settings-title" aria-modal="true">
+        <h2 id="settings-title" class="neon-modal-title">AJUSTES</h2>
+        <div class="settings-list">
+          <label class="setting-row">
+            <span>Música de fondo</span>
+            <input id="settings-music" type="checkbox" checked />
+            <span class="setting-toggle"></span>
+          </label>
+          <label class="setting-row">
+            <span>Sonidos de botones</span>
+            <input id="settings-sfx" type="checkbox" checked />
+            <span class="setting-toggle"></span>
+          </label>
+        </div>
+        <button id="btn-close-settings" class="neon-btn neon-btn-inline" type="button">VOLVER</button>
+      </div>
+    </div>
+
+    <!-- Modal sin vidas -->
+    <div class="modal-backdrop" id="game-over-modal" hidden>
+      <div class="modal-card" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+        <div class="modal-glow" aria-hidden="true"></div>
+        <div class="modal-icon-wrap"><span class="modal-icon">💔</span></div>
+        <h2 id="modal-title">¡Sin vidas!</h2>
+        <p class="modal-text">Reiniciá el nivel, reclamá un corazón gratis o comprá un pack en la tienda.</p>
+        <div id="purchase-box-gameover" class="shop-container"></div>
+        <div class="modal-actions">
+          <button id="btn-restart-level" class="btn btn-primary" type="button">Reiniciar nivel</button>
+          <button id="btn-close-modal" class="btn btn-ghost" type="button">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú móvil (overflow) -->
+    <div class="modal-backdrop sheet-backdrop" id="mobile-menu-modal" hidden>
+      <div class="modal-card sheet-card mobile-menu-card" role="dialog" aria-labelledby="mobile-menu-title" aria-modal="true">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <h2 id="mobile-menu-title" class="sheet-title">Opciones</h2>
+        <div class="mobile-menu-list">
+          <button id="mobile-menu-reset" class="mobile-menu-item" type="button">
+            <span>Reiniciar nivel</span>
+          </button>
+          <button id="mobile-menu-solve" class="mobile-menu-item" type="button">
+            <span>Ver solución</span>
+          </button>
+          <button id="mobile-menu-share" class="mobile-menu-item" type="button">
+            <span>Compartir juego</span>
+          </button>
+          <button id="mobile-menu-install" class="mobile-menu-item" type="button" hidden>
+            <span>Instalar app</span>
+          </button>
+          <label class="mobile-menu-item mobile-menu-toggle">
+            <span>Música de fondo</span>
+            <input id="mobile-music-toggle" type="checkbox" checked />
+            <span class="setting-toggle"></span>
+          </label>
+        </div>
+        <button id="btn-close-mobile-menu" class="btn btn-ghost full-width" type="button">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- Tienda -->
+    <div class="modal-backdrop" id="shop-modal" hidden>
+      <div class="modal-card shop-card" role="dialog" aria-labelledby="shop-title" aria-modal="true">
+        <div class="modal-glow" aria-hidden="true"></div>
+        <div class="shop-header">
+          <span class="shop-icon">🛒</span>
+          <h2 id="shop-title">Tienda Sudoku Pelu</h2>
+          <p class="modal-text">Transferí a Macro desde cualquier banco. Al impactar el pago, el pack se activa solo.</p>
+        </div>
+        <div class="payout-info" id="shop-payout-info">
+          <span class="payout-bank">🏦 Banco Macro</span>
+          <p class="payout-alias-label">Alias de cobro</p>
+          <code class="payout-alias" id="shop-payment-alias">FLECO.CRUCE.CINTO</code>
+          <p class="payout-note">Activación automática al confirmar el ingreso en la cuenta</p>
+        </div>
+        <div id="purchase-box-shop" class="shop-container"></div>
+        <div class="trust-badges">
+          <span>✓ Activación automática</span>
+          <span>✓ Cuenta Banco Macro</span>
+          <span>✓ Corazón gratis cada 12 h</span>
+        </div>
+        <button id="btn-close-shop" class="btn btn-ghost full-width" type="button">Cerrar tienda</button>
+      </div>
+    </div>
+
+    <template id="free-heart-template">
+      <div class="free-heart-box" id="free-heart-box">
+        <div class="free-heart-icon">🎁</div>
+        <div class="free-heart-info">
+          <strong>Corazón gratis</strong>
+          <p class="free-heart-status" data-free-status>Disponible cada 12 horas</p>
+        </div>
+        <button class="btn btn-gold btn-compact btn-claim-free" type="button" data-claim-free hidden>
+          Reclamar ❤️
+        </button>
+        <span class="free-heart-timer" data-free-timer hidden></span>
+      </div>
+    </template>
+
+    <template id="pack-card-template">
+      <article class="pack-card" data-pack-id>
+        <div class="pack-card-badge" data-pack-badge hidden>Premium</div>
+        <div class="pack-card-icon" data-pack-icon></div>
+        <h3 class="pack-card-name" data-pack-name></h3>
+        <p class="pack-card-desc" data-pack-desc></p>
+        <div class="pack-card-price">
+          <span data-pack-price></span>
+          <small>pesos argentinos</small>
+        </div>
+        <button class="btn btn-gold full-width btn-pay-pack" type="button">Pagar ahora</button>
+      </article>
+    </template>
+
+    <!-- Esperando pago (activación automática) -->
+    <div class="modal-backdrop" id="payment-wait-modal" hidden>
+      <div class="modal-card transfer-card payment-wait-card" role="dialog" aria-labelledby="payment-wait-title" aria-modal="true">
+        <div class="payment-wait-spinner" aria-hidden="true"></div>
+        <h2 id="payment-wait-title">Esperando tu pago</h2>
+        <p class="modal-text" id="payment-wait-status">Transferí el monto exacto al alias Macro. El pack se activa solo al impactar.</p>
+        <div class="transfer-detail">
+          <div class="transfer-row">
+            <span>Banco</span>
+            <strong id="wait-bank">Banco Macro</strong>
+          </div>
+          <div class="transfer-row">
+            <span>Alias</span>
+            <div class="transfer-copy-row">
+              <code id="wait-alias">FLECO.CRUCE.CINTO</code>
+              <button class="btn btn-outline small btn-copy-wait" data-copy-target="wait-alias" type="button">Copiar</button>
+            </div>
+          </div>
+          <div class="transfer-row">
+            <span>Monto exacto</span>
+            <div class="transfer-copy-row">
+              <code id="wait-amount"></code>
+              <button class="btn btn-outline small btn-copy-wait" data-copy-target="wait-amount" type="button">Copiar</button>
+            </div>
+          </div>
+          <div class="transfer-row">
+            <span>Código (motivo)</span>
+            <div class="transfer-copy-row">
+              <code id="wait-ref"></code>
+              <button class="btn btn-outline small btn-copy-wait" data-copy-target="wait-ref" type="button">Copiar</button>
+            </div>
+          </div>
+        </div>
+        <p class="payment-wait-hint">Podés pagar desde cualquier banco o billetera. No cierres esta pantalla.</p>
+        <button id="btn-cancel-payment-wait" class="btn btn-ghost full-width" type="button">Cancelar</button>
+      </div>
+    </div>
+
+    <script src="config.js?v=12"></script>
+    <script src="script.js?v=12"></script>
+  </body>
+</html>
