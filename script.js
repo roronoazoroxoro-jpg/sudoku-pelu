@@ -2641,6 +2641,110 @@ gameOverModal.addEventListener('click', event => {
   if (event.target === gameOverModal) closeGameOverModal();
 });
 
+function initNeonParticles() {
+  const canvas = document.getElementById('neon-particles-canvas');
+  if (!canvas) return;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ctx = canvas.getContext('2d');
+  const colors = ['#00e5ff', '#ff2d95', '#a855f7', '#22d3ee', '#f472b6'];
+  let particles = [];
+  let width = 0;
+  let height = 0;
+  let rafId = null;
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+
+  function seedParticles() {
+    const count = Math.min(reducedMotion ? 25 : 75, Math.floor(width / 10) + 20);
+    particles = Array.from({ length: count }, () => {
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 2.2 + 0.8,
+        color,
+        alpha: Math.random() * 0.5 + 0.35,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.02 + 0.008,
+      };
+    });
+  }
+
+  function draw() {
+    if (!mainMenu || mainMenu.hidden) {
+      rafId = requestAnimationFrame(draw);
+      return;
+    }
+
+    ctx.clearRect(0, 0, width, height);
+
+    for (let i = 0; i < particles.length; i += 1) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.pulse += p.pulseSpeed;
+
+      if (p.x < -10) p.x = width + 10;
+      if (p.x > width + 10) p.x = -10;
+      if (p.y < -10) p.y = height + 10;
+      if (p.y > height + 10) p.y = -10;
+
+      const glow = p.alpha + Math.sin(p.pulse) * 0.2;
+
+      for (let j = i + 1; j < particles.length; j += 1) {
+        const q = particles[j];
+        const dx = p.x - q.x;
+        const dy = p.y - q.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 110) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(0, 229, 255, ${(1 - dist / 110) * 0.12})`;
+          ctx.lineWidth = 0.6;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.stroke();
+        }
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0.15, Math.min(1, glow));
+      ctx.shadowBlur = 14;
+      ctx.shadowColor = p.color;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+    }
+
+    rafId = requestAnimationFrame(draw);
+  }
+
+  resize();
+  seedParticles();
+  draw();
+
+  window.addEventListener('resize', () => {
+    resize();
+    seedParticles();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    } else if (!rafId) {
+      draw();
+    }
+  });
+}
+
 function initApp() {
   if (appShell) appShell.classList.add('app-hidden');
 
@@ -2658,6 +2762,7 @@ function initApp() {
   startFreeHeartTimer();
   handlePaymentReturn();
   registerServiceWorker();
+  initNeonParticles();
 
   if (isStandaloneApp()) showGameHub();
   else showLanding();

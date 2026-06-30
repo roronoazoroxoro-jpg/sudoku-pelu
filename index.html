@@ -33,19 +33,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=18" />
+    <link rel="stylesheet" href="styles.css?v=19" />
   </head>
   <body>
     <div id="main-menu" class="screen main-menu" role="main">
-      <div class="menu-checker" aria-hidden="true"></div>
+      <canvas id="neon-particles-canvas" class="neon-particles-canvas" aria-hidden="true"></canvas>
       <div class="menu-vignette" aria-hidden="true"></div>
       <div class="menu-scanlines" aria-hidden="true"></div>
-
-      <div class="landing-orbs" aria-hidden="true">
-        <span class="landing-orb landing-orb-1"></span>
-        <span class="landing-orb landing-orb-2"></span>
-        <span class="landing-orb landing-orb-3"></span>
-      </div>
 
       <div class="menu-content neon-menu">
         <!-- Pantalla de descarga (navegador web) -->
@@ -65,8 +59,6 @@
             <li><span aria-hidden="true">👹</span> Jefes</li>
             <li><span aria-hidden="true">📴</span> Offline</li>
           </ul>
-
-          <p class="landing-lead">Instalá la app y jugá como en un juego de verdad — sin depender del navegador.</p>
 
           <div class="landing-card">
             <p class="landing-card-label">Elegí tu dispositivo</p>
@@ -582,7 +574,7 @@
       </div>
     </div>
 
-    <script src="config.js?v=18"></script>
-    <script src="script.js?v=18"></script>
+    <script src="config.js?v=19"></script>
+    <script src="script.js?v=19"></script>
   </body>
 </html>
