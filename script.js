@@ -161,6 +161,7 @@ function updateInstallButtonsVisibility() {
   const onMobile = isMobileDevice();
 
   if (btnMenuInstall) btnMenuInstall.hidden = installed || !onMobile;
+  if (btnMenuPc) btnMenuPc.hidden = installed || !onMobile;
   if (menuPlatformMobile) menuPlatformMobile.hidden = !onMobile;
   if (btnMenuInstallDesktop) btnMenuInstallDesktop.hidden = installed || onMobile;
   if (btnInstall) btnInstall.hidden = installed || onMobile;
