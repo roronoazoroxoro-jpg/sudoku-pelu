@@ -1,6 +1,11 @@
 {
   "name": "sudoku-pelu",
   "private": true,
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "deploy": "netlify deploy --prod --dir .",
+    "deploy:preview": "netlify deploy --dir ."
+  },
   "dependencies": {
     "@netlify/blobs": "^8.1.0"
   },
