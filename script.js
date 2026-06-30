@@ -78,15 +78,17 @@ const btnSolve = document.querySelector('#btn-solve');
 const btnShop = document.querySelector('#btn-shop');
 const btnShare = document.querySelector('#btn-share');
 const btnInstall = document.querySelector('#btn-install');
-const btnMenuInstall = document.querySelector('#btn-menu-install');
-const btnMenuInstallDesktop = document.querySelector('#btn-menu-install-desktop');
-const btnMenuPc = document.querySelector('#btn-menu-pc');
+const btnDownloadMobile = document.querySelector('#btn-download-mobile');
+const btnDownloadPc = document.querySelector('#btn-download-pc');
+const landingPanel = document.querySelector('#landing-panel');
+const gameHubPanel = document.querySelector('#game-hub-panel');
 const installGuideModal = document.querySelector('#install-guide-modal');
 const installGuideIos = document.querySelector('#install-guide-ios');
 const installGuideAndroid = document.querySelector('#install-guide-android');
 const installGuideDesktop = document.querySelector('#install-guide-desktop');
+const installGuideWrong = document.querySelector('#install-guide-wrong-device');
+const installGuideWrongText = document.querySelector('#install-guide-wrong-text');
 const btnCloseInstallGuide = document.querySelector('#btn-close-install-guide');
-const menuPlatformMobile = document.querySelector('#menu-platform-mobile');
 const btnBuySidebar = document.querySelector('#btn-buy-sidebar');
 const footerShop = document.querySelector('#footer-shop');
 const footerAlias = document.querySelector('#footer-alias');
@@ -157,26 +159,62 @@ function getGameUrl() {
 }
 
 function updateInstallButtonsVisibility() {
-  const installed = isStandaloneApp();
-  const onMobile = isMobileDevice();
-
-  if (btnMenuInstall) btnMenuInstall.hidden = installed || !onMobile;
-  if (btnMenuPc) btnMenuPc.hidden = installed || !onMobile;
-  if (menuPlatformMobile) menuPlatformMobile.hidden = !onMobile;
-  if (btnMenuInstallDesktop) btnMenuInstallDesktop.hidden = installed || onMobile;
-  if (btnInstall) btnInstall.hidden = installed || onMobile;
-  if (mobileMenuInstall) mobileMenuInstall.hidden = installed || !onMobile;
+  if (mobileMenuInstall) {
+    mobileMenuInstall.hidden = isStandaloneApp() || !isMobileDevice();
+  }
+  if (btnInstall) btnInstall.hidden = isStandaloneApp() || isMobileDevice();
 }
 
-function showInstallGuideModal() {
+function showLanding() {
+  if (landingPanel) landingPanel.hidden = false;
+  if (gameHubPanel) gameHubPanel.hidden = true;
+  stopBoss();
+  showScreen('menu');
+}
+
+function showGameHub() {
+  if (!isStandaloneApp()) {
+    showLanding();
+    return;
+  }
+  updateMenuStats();
+  if (landingPanel) landingPanel.hidden = true;
+  if (gameHubPanel) gameHubPanel.hidden = false;
+  stopBoss();
+  showScreen('menu');
+  if (musicToggle?.checked) startAmbientMusic();
+}
+
+function showInstallGuideFor(platform) {
   if (!installGuideModal) return;
   installGuideIos.hidden = true;
   installGuideAndroid.hidden = true;
   installGuideDesktop.hidden = true;
+  if (installGuideWrong) installGuideWrong.hidden = true;
 
-  if (isIOSDevice()) installGuideIos.hidden = false;
-  else if (isAndroidDevice()) installGuideAndroid.hidden = false;
-  else installGuideDesktop.hidden = false;
+  const title = document.querySelector('#install-guide-title');
+  if (platform === 'mobile-ios') {
+    if (title) title.textContent = 'Descargar en iPhone';
+    installGuideIos.hidden = false;
+  } else if (platform === 'mobile-android') {
+    if (title) title.textContent = 'Descargar en Android';
+    installGuideAndroid.hidden = false;
+  } else if (platform === 'desktop') {
+    if (title) title.textContent = 'Descargar en PC';
+    installGuideDesktop.hidden = false;
+  } else if (platform === 'need-phone') {
+    if (title) title.textContent = 'Descargar en celular';
+    if (installGuideWrong) installGuideWrong.hidden = false;
+    if (installGuideWrongText) {
+      installGuideWrongText.innerHTML = `Abrí <strong>${getGameUrl()}</strong> en el navegador de tu celular y tocá <strong>Descargar para celular</strong>.`;
+    }
+  } else if (platform === 'need-pc') {
+    if (title) title.textContent = 'Descargar en PC';
+    if (installGuideWrong) installGuideWrong.hidden = false;
+    if (installGuideWrongText) {
+      installGuideWrongText.innerHTML = `En tu computadora abrí <strong>${getGameUrl()}</strong> y tocá <strong>Descargar para PC</strong>.`;
+    }
+  }
 
   installGuideModal.hidden = false;
   document.body.classList.add('modal-open');
@@ -201,23 +239,55 @@ async function triggerInstall() {
     updateInstallButtonsVisibility();
     return;
   }
-  showInstallGuideModal();
+  if (isIOSDevice()) showInstallGuideFor('mobile-ios');
+  else if (isAndroidDevice()) showInstallGuideFor('mobile-android');
+  else showInstallGuideFor('desktop');
 }
 
-async function sharePcLink() {
+async function downloadForMobile() {
   haptic('light');
-  const url = getGameUrl();
-  const text = 'Abrí este link en tu computadora para jugar Sudoku Pelu:';
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: 'Sudoku Pelu — PC', text, url });
-      return;
-    }
-  } catch {
-    /* cancelado */
+  playMenuConfirmSound();
+  if (isStandaloneApp()) {
+    showGameHub();
+    return;
   }
-  await copyText(url, 'Link para PC');
-  setMessage('Link copiado. Pegalo en el navegador de tu computadora.', 'success');
+  if (!isMobileDevice()) {
+    showInstallGuideFor('need-phone');
+    return;
+  }
+  if (deferredInstallPrompt) {
+    await triggerInstall();
+    return;
+  }
+  if (isIOSDevice()) showInstallGuideFor('mobile-ios');
+  else showInstallGuideFor('mobile-android');
+}
+
+async function downloadForPc() {
+  haptic('light');
+  playMenuConfirmSound();
+  if (isStandaloneApp()) {
+    showGameHub();
+    return;
+  }
+  if (isMobileDevice()) {
+    showInstallGuideFor('need-pc');
+    try {
+      await navigator.share({
+        title: 'Sudoku Pelu — PC',
+        text: 'Descargá Sudoku Pelu en tu computadora:',
+        url: getGameUrl(),
+      });
+    } catch {
+      await copyText(getGameUrl(), 'Link para PC');
+    }
+    return;
+  }
+  if (deferredInstallPrompt) {
+    await triggerInstall();
+    return;
+  }
+  showInstallGuideFor('desktop');
 }
 let gameStarted = false;
 let sfxEnabled = true;
@@ -1754,16 +1824,8 @@ function initMainMenu() {
     });
   }
 
-  document.querySelectorAll('.menu-platform .neon-btn[data-action]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (audioContext?.state === 'suspended') audioContext.resume();
-      handleMenuAction(btn.dataset.action, btn);
-    });
-  });
-
-  btnMenuInstall?.addEventListener('click', triggerInstall);
-  btnMenuInstallDesktop?.addEventListener('click', triggerInstall);
-  btnMenuPc?.addEventListener('click', sharePcLink);
+  btnDownloadMobile?.addEventListener('click', downloadForMobile);
+  btnDownloadPc?.addEventListener('click', downloadForPc);
   btnCloseInstallGuide?.addEventListener('click', hideInstallGuideModal);
   installGuideModal?.addEventListener('click', e => {
     if (e.target === installGuideModal) hideInstallGuideModal();
@@ -1881,13 +1943,14 @@ function initInstallPrompt() {
   btnInstall?.addEventListener('click', triggerInstall);
   mobileMenuInstall?.addEventListener('click', () => {
     hideMobileMenuModal();
-    triggerInstall();
+    downloadForMobile();
   });
 
   window.addEventListener('appinstalled', () => {
     deferredInstallPrompt = null;
     updateInstallButtonsVisibility();
-    setMessage('¡App instalada! Jugá desde tu pantalla de inicio.', 'success');
+    showGameHub();
+    setMessage('¡App instalada! Ya podés jugar.', 'success');
   });
 
   updateInstallButtonsVisibility();
@@ -2001,6 +2064,11 @@ function animateNeonClick(button) {
 }
 
 function handleMenuAction(action, button) {
+  if (!isStandaloneApp()) {
+    showLanding();
+    setMessage('Descargá la app para jugar.', 'info');
+    return;
+  }
   animateNeonClick(button);
   playMenuConfirmSound();
 
@@ -2482,10 +2550,8 @@ function showScreen(screen) {
 }
 
 function showMainMenu() {
-  updateMenuStats();
-  stopBoss();
-  showScreen('menu');
-  if (musicToggle?.checked) startAmbientMusic();
+  if (isStandaloneApp()) showGameHub();
+  else showLanding();
 }
 
 function showLevelMap(mapId, scrollToLevel) {
@@ -2576,10 +2642,6 @@ gameOverModal.addEventListener('click', event => {
 });
 
 function initApp() {
-  if (mainMenu) {
-    mainMenu.classList.remove('hidden');
-    mainMenu.hidden = false;
-  }
   if (appShell) appShell.classList.add('app-hidden');
 
   applyBranding();
@@ -2596,6 +2658,9 @@ function initApp() {
   startFreeHeartTimer();
   handlePaymentReturn();
   registerServiceWorker();
+
+  if (isStandaloneApp()) showGameHub();
+  else showLanding();
 }
 
 initApp();

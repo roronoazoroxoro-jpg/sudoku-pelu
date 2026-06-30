@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="description" content="Sudoku Pelu — 6 mapas, 600 niveles, jefes en el nivel 50 y 100. Diseño premium, vidas, rachas y compra de vidas extras." />
+    <meta name="description" content="Descargá Sudoku Pelu gratis para celular o PC. 6 mapas, 600 niveles, jefes y diseño arcade." />
     <meta name="keywords" content="sudoku, juego sudoku, sudoku online, sudoku gratis, sudoku argentina" />
     <meta name="author" content="Sudoku Pelu" />
     <meta name="theme-color" content="#030810" />
@@ -33,7 +33,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=16" />
+    <link rel="stylesheet" href="styles.css?v=17" />
   </head>
   <body>
     <div id="main-menu" class="screen main-menu" role="main">
@@ -42,43 +42,48 @@
       <div class="menu-scanlines" aria-hidden="true"></div>
 
       <div class="menu-content neon-menu">
-        <div class="neon-logo-wrap">
-          <div class="neon-logo" aria-hidden="true"><span>9</span></div>
-        </div>
-        <h1 class="neon-title" data-text="SUDOKU PELU">SUDOKU PELU</h1>
-        <p class="neon-subtitle">6 MAPAS · 600 NIVELES · JEFES</p>
+        <!-- Pantalla de descarga (navegador web) -->
+        <div id="landing-panel" class="menu-panel landing-panel">
+          <div class="neon-logo-wrap">
+            <div class="neon-logo" aria-hidden="true"><span>9</span></div>
+          </div>
+          <h1 class="neon-title" data-text="SUDOKU PELU">SUDOKU PELU</h1>
+          <p class="neon-subtitle">6 MAPAS · 600 NIVELES · JEFES</p>
+          <p class="landing-lead">Descargá la app gratis y jugá sin depender del navegador.</p>
 
-        <div class="neon-stats">
-          <div class="neon-stat"><span id="menu-completed">0</span><small>OK</small></div>
-          <div class="neon-stat"><span id="menu-unlocked">1</span><small>LIBRES</small></div>
-          <div class="neon-stat"><span id="menu-streak">0</span><small>RACHA</small></div>
-        </div>
+          <div class="landing-downloads">
+            <button id="btn-download-mobile" class="neon-btn neon-btn-install neon-btn-wide landing-btn" type="button">
+              📲 Descargar para celular
+            </button>
+            <button id="btn-download-pc" class="neon-btn neon-btn-pc neon-btn-wide landing-btn" type="button">
+              💻 Descargar para PC
+            </button>
+          </div>
 
-        <div class="menu-platform mobile-only" id="menu-platform-mobile">
-          <button id="btn-menu-install" class="neon-btn neon-btn-install neon-btn-wide" type="button">
-            📲 Descargar en el celular
-          </button>
-          <button class="neon-btn neon-btn-play neon-btn-wide" data-action="play" type="button">
-            ▶️ Jugar ahora
-          </button>
-          <button id="btn-menu-pc" class="neon-btn neon-btn-pc neon-btn-wide" type="button">
-            💻 Jugar en la PC
-          </button>
+          <p class="landing-note">Android · iPhone · Windows · Mac · Gratis</p>
         </div>
 
-        <nav class="neon-nav" aria-label="Menú principal">
-          <button class="neon-btn neon-btn-play-main desktop-only" data-action="play" type="button" style="--i:0">JUGAR</button>
-          <button class="neon-btn" data-action="map" type="button" style="--i:1">MAPA</button>
-          <button class="neon-btn neon-btn-wide" data-action="store" type="button" style="--i:2">TIENDA</button>
-          <button class="neon-btn neon-btn-wide" data-action="settings" type="button" style="--i:3">AJUSTES</button>
-          <button class="neon-btn" data-action="share" type="button" style="--i:4">COMPARTIR</button>
-        </nav>
+        <!-- Menú del juego (solo con la app instalada) -->
+        <div id="game-hub-panel" class="menu-panel game-hub-panel" hidden>
+          <div class="neon-logo-wrap">
+            <div class="neon-logo" aria-hidden="true"><span>9</span></div>
+          </div>
+          <h2 class="neon-title hub-title">SUDOKU PELU</h2>
+          <p class="neon-subtitle">6 MAPAS · 600 NIVELES · JEFES</p>
 
-        <div class="menu-platform desktop-only" id="menu-platform-desktop">
-          <button id="btn-menu-install-desktop" class="neon-btn neon-btn-install" type="button">
-            💻 Instalar en la PC
-          </button>
-          <p class="menu-mobile-hint">¿En el celular? Abrí <strong>sudoku-pelu-game.netlify.app</strong> desde tu navegador.</p>
+          <div class="neon-stats">
+            <div class="neon-stat"><span id="menu-completed">0</span><small>OK</small></div>
+            <div class="neon-stat"><span id="menu-unlocked">1</span><small>LIBRES</small></div>
+            <div class="neon-stat"><span id="menu-streak">0</span><small>RACHA</small></div>
+          </div>
+
+          <nav class="neon-nav" aria-label="Menú del juego">
+            <button class="neon-btn neon-btn-play neon-btn-wide" data-action="play" type="button" style="--i:0">▶️ JUGAR</button>
+            <button class="neon-btn" data-action="map" type="button" style="--i:1">MAPA</button>
+            <button class="neon-btn neon-btn-wide" data-action="store" type="button" style="--i:2">TIENDA</button>
+            <button class="neon-btn neon-btn-wide" data-action="settings" type="button" style="--i:3">AJUSTES</button>
+            <button class="neon-btn" data-action="share" type="button" style="--i:4">COMPARTIR</button>
+          </nav>
         </div>
       </div>
     </div>
@@ -410,11 +415,15 @@
             <li>Confirmá. El juego queda en tu celular.</li>
           </ol>
         </div>
+        <div id="install-guide-wrong-device" class="install-guide-steps" hidden>
+          <p class="modal-text" id="install-guide-wrong-text"></p>
+        </div>
         <div id="install-guide-desktop" class="install-guide-steps" hidden>
           <p class="modal-text">En <strong>PC</strong> (Chrome o Edge):</p>
           <ol>
             <li>Buscá el ícono <strong>Instalar</strong> en la barra de direcciones.</li>
             <li>O usá el menú del navegador → <strong>Instalar Sudoku Pelu</strong>.</li>
+            <li>Abrí el juego desde el acceso directo en tu escritorio.</li>
           </ol>
         </div>
         <button id="btn-close-install-guide" class="btn btn-gold full-width" type="button">Entendido</button>
@@ -540,7 +549,7 @@
       </div>
     </div>
 
-    <script src="config.js?v=16"></script>
-    <script src="script.js?v=16"></script>
+    <script src="config.js?v=17"></script>
+    <script src="script.js?v=17"></script>
   </body>
 </html>
